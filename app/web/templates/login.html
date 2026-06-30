@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
+<div class="login-page">
+  <div class="login-card">
+    <h1>Core Mobile</h1>
+    <p>Financiera Confianza — Panel administrativo</p>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+    {% if flash %}
+    <div class="alert alert-info">{{ flash }}</div>
+    {% endif %}
+
+    <form method="post" action="/login">
+      <div class="form-group">
+        <label for="usuario">Usuario</label>
+        <input id="usuario" name="usuario" type="text" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

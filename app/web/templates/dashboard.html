@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+<div class="layout">
+  <header class="topbar">
+    <div>
+      <h1>Core Mobile - Financiera Confianza</h1>
+      <small>Panel administrativo</small>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="sidebar">
+      <a href="/dashboard" class="{{ 'active' if active == 'dashboard' else '' }}">Dashboard</a>
+      <a href="/solicitudes-web" class="{{ 'active' if active == 'solicitudes' else '' }}">Solicitudes</a>
+      <a href="/logout">Cerrar sesión</a>
+    </nav>
+    <main class="content">
+      <h2 class="page-title">Dashboard</h2>
+
+      {% if flash %}
+      <div class="alert alert-{{ flash_type }}">{{ flash }}</div>
+      {% endif %}
+      {% if db_error %}
+      <div class="alert alert-error">Error Supabase: {{ db_error }}</div>
+      {% endif %}
+
+      <div class="cards">
+        <div class="card card-stat">
+          <div class="card-label">Total solicitudes</div>
+          <div class="card-value">{{ stats.total }}</div>
+        </div>
+        <div class="card card-stat">
+          <div class="card-label">Enviadas</div>
+          <div class="card-value aqua">{{ stats.enviadas }}</div>
+        </div>
+        <div class="card card-stat">
+          <div class="card-label">Aprobadas</div>
+          <div class="card-value green">{{ stats.aprobadas }}</div>
+        </div>
+        <div class="card card-stat">
+          <div class="card-label">Rechazadas</div>
+          <div class="card-value red">{{ stats.rechazadas }}</div>
+        </div>
+        <div class="card card-stat">
+          <div class="card-label">Desembolsadas</div>
+          <div class="card-value orange">{{ stats.desembolsadas }}</div>
+        </div>
+        <div class="card card-stat">
+          <div class="card-label">Monto total solicitado</div>
+          <div class="card-value">{{ stats.monto_total_solicitado | currency }}</div>
+        </div>
+      </div>
+
+      <a class="btn btn-primary" href="/solicitudes-web">Ver solicitudes</a>
+    </main>
+  </div>
+</div>
+{% endblock %}

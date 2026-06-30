@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Solicitudes{% endblock %}
+{% block body %}
+<div class="layout">
+  <header class="topbar">
+    <div>
+      <h1>Core Mobile - Financiera Confianza</h1>
+      <small>Panel administrativo</small>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="sidebar">
+      <a href="/dashboard" class="{{ 'active' if active == 'dashboard' else '' }}">Dashboard</a>
+      <a href="/solicitudes-web" class="{{ 'active' if active == 'solicitudes' else '' }}">Solicitudes</a>
+      <a href="/logout">Cerrar sesión</a>
+    </nav>
+    <main class="content">
+      <h2 class="page-title">Solicitudes de crédito</h2>
+
+      {% if flash %}
+      <div class="alert alert-{{ flash_type }}">{{ flash }}</div>
+      {% endif %}
+      {% if db_error %}
+      <div class="alert alert-error">Error Supabase: {{ db_error }}</div>
+      {% endif %}
+
+      <div class="panel table-wrap">
+        {% if solicitudes %}
+        <table>
+          <thead>
+            <tr>
+              <th>Expediente</th>
+              <th>Cliente</th>
+              <th>DNI</th>
+              <th>Monto</th>
+              <th>Plazo</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in solicitudes %}
+            <tr>
+              <td>{{ s.numero_expediente or '—' }}</td>
+              <td>{{ s.cliente_nombre }}</td>
+              <td>{{ s.cliente_dni or '—' }}</td>
+              <td>{{ s.monto_solicitado | currency }}</td>
+              <td>{{ s.plazo_meses or '—' }} meses</td>
+              <td><span class="badge {{ s.estado | estado_badge }}">{{ s.estado or '—' }}</span></td>
+              <td>{{ s.created_at | datetime_fmt }}</td>
+              <td><a class="btn btn-outline btn-sm" href="/solicitudes-web/{{ s.id }}">Ver</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="empty-msg">No hay solicitudes registradas en Supabase.</p>
+        {% endif %}
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}

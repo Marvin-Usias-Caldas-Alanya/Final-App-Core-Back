@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Detalle solicitud{% endblock %}
+{% block body %}
+<div class="layout">
+  <header class="topbar">
+    <div>
+      <h1>Core Mobile - Financiera Confianza</h1>
+      <small>Panel administrativo</small>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="sidebar">
+      <a href="/dashboard" class="{{ 'active' if active == 'dashboard' else '' }}">Dashboard</a>
+      <a href="/solicitudes-web" class="{{ 'active' if active == 'solicitudes' else '' }}">Solicitudes</a>
+      <a href="/logout">Cerrar sesión</a>
+    </nav>
+    <main class="content">
+      <div class="toolbar">
+        <h2 class="page-title" style="margin:0">Detalle de solicitud</h2>
+        <a class="btn btn-outline" href="/solicitudes-web">Volver</a>
+      </div>
+
+      {% if flash %}
+      <div class="alert alert-{{ flash_type }}">{{ flash }}</div>
+      {% endif %}
+
+      <div class="panel">
+        <div class="detail-header">
+          <h3>{{ solicitud.numero_expediente or '—' }}</h3>
+          <span class="badge {{ solicitud.estado | estado_badge }}">{{ solicitud.estado or '—' }}</span>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Cliente</label>
+            <span>{{ cliente_nombre }}</span>
+          </div>
+          <div class="detail-item">
+            <label>DNI</label>
+            <span>{{ cliente.numero_documento if cliente else '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Asesor</label>
+            <span>{{ asesor_nombre }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Monto solicitado</label>
+            <span>{{ solicitud.monto_solicitado | currency }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Monto aprobado</label>
+            <span>{% if solicitud.monto_aprobado %}{{ solicitud.monto_aprobado | currency }}{% else %}—{% endif %}</span>
+          </div>
+          <div class="detail-item">
+            <label>Plazo</label>
+            <span>{{ solicitud.plazo_meses or '—' }} meses</span>
+          </div>
+          <div class="detail-item">
+            <label>Cuota estimada</label>
+            <span>{{ solicitud.cuota_estimada | currency }}</span>
+          </div>
+          <div class="detail-item">
+            <label>TEA referencial</label>
+            <span>{{ solicitud.tea_referencial or '—' }}%</span>
+          </div>
+          <div class="detail-item">
+            <label>Destino crédito</label>
+            <span>{{ solicitud.destino_credito or '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Fecha registro</label>
+            <span>{{ solicitud.created_at | datetime_fmt }}</span>
+          </div>
+          {% if solicitud.motivo_rechazo %}
+          <div class="detail-item">
+            <label>Motivo rechazo</label>
+            <span>{{ solicitud.motivo_rechazo }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="actions">
+          {% if puede_aprobar %}
+          <form method="post" action="/solicitudes-web/{{ solicitud.id }}/aprobar">
+            <button class="btn btn-success" type="submit">Aprobar</button>
+          </form>
+          {% endif %}
+          {% if puede_rechazar %}
+          <form method="post" action="/solicitudes-web/{{ solicitud.id }}/rechazar">
+            <button class="btn btn-danger" type="submit">Rechazar</button>
+          </form>
+          {% endif %}
+          {% if puede_desembolsar %}
+          <form method="post" action="/solicitudes-web/{{ solicitud.id }}/desembolsar">
+            <button class="btn btn-warning" type="submit">Desembolsar</button>
+          </form>
+          {% endif %}
+          {% if estado == 'desembolsado' %}
+          <div class="alert alert-success" style="margin:0">Crédito generado en Supabase. Visible en app Clientes.</div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}
