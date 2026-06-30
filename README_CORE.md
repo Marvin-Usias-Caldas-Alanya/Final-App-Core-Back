@@ -121,12 +121,12 @@ Asegúrese de permitir el puerto 8000 en el firewall de Windows si no responde.
 
 ## Desplegar en Render
 
-Repositorio: [Final-App-Core](https://github.com/Marvin-Usias-Caldas-Alanya/Final-App-Core)
+Repositorio: [Final-App-Core-Back](https://github.com/Marvin-Usias-Caldas-Alanya/Final-App-Core-Back)
 
 ### Opción A — Blueprint (`render.yaml`)
 
 1. Entra a [dashboard.render.com](https://dashboard.render.com) → **New** → **Blueprint**
-2. Conecta el repo `Marvin-Usias-Caldas-Alanya/Final-App-Core`
+2. Conecta el repo `Marvin-Usias-Caldas-Alanya/Final-App-Core-Back`
 3. Render detectará `render.yaml` y creará el servicio web
 4. Completa las variables marcadas como secretas:
    - `SUPABASE_URL`
