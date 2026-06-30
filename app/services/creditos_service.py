@@ -4,10 +4,13 @@ from typing import Any
 
 from dateutil.relativedelta import relativedelta
 
+from app.core.tarifario import PRODUCTO_DEFAULT, resolver_producto
+
 logger = logging.getLogger(__name__)
 
-DEFAULT_TEA = 45.0
-PRODUCTO_NOMBRE = "Microcrédito Confianza"
+_default = resolver_producto(codigo=PRODUCTO_DEFAULT)
+DEFAULT_TEA = _default.tea_referencial
+PRODUCTO_NOMBRE = _default.nombre
 
 
 def tasa_mensual(tea_percent: float) -> float:

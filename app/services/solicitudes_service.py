@@ -90,10 +90,9 @@ def desembolsar_solicitud(
     notificacion_mensaje: str | None = None,
 ) -> dict[str, Any]:
     from app.services.creditos_service import (
-        DEFAULT_TEA,
-        PRODUCTO_NOMBRE,
         generar_cronograma,
     )
+    from app.core.tarifario import resolver_producto
 
     solicitud = _fetch_solicitud(supabase, solicitud_id)
     estado = (solicitud.get("estado") or "").lower()
@@ -109,7 +108,9 @@ def desembolsar_solicitud(
     agencia_id = solicitud.get("agencia_id")
     monto = float(solicitud.get("monto_aprobado") or solicitud.get("monto_solicitado") or 0)
     plazo_meses = int(solicitud.get("plazo_meses") or 0)
-    tea = float(solicitud.get("tea_referencial") or DEFAULT_TEA)
+    producto = resolver_producto(tipo_negocio=solicitud.get("tipo_negocio"))
+    tea = float(solicitud.get("tea_referencial") or producto.tea_referencial)
+    producto_nombre = producto.nombre
 
     if not cliente_id:
         raise HTTPException(status_code=400, detail="La solicitud no tiene cliente_id")
@@ -124,7 +125,7 @@ def desembolsar_solicitud(
         "cliente_id": cliente_id,
         "asesor_id": asesor_id,
         "agencia_id": agencia_id,
-        "producto": PRODUCTO_NOMBRE,
+        "producto": producto_nombre,
         "monto_desembolsado": monto,
         "plazo_meses": plazo_meses,
         "tea": tea,
@@ -180,7 +181,7 @@ def desembolsar_solicitud(
         cliente_id=cliente_id,
         titulo="Crédito desembolsado",
         mensaje=notificacion_mensaje
-        or f"Se desembolsó S/ {monto:.2f} en {PRODUCTO_NOMBRE}.",
+        or f"Se desembolsó S/ {monto:.2f} en {producto_nombre}.",
     )
 
     logger.info(

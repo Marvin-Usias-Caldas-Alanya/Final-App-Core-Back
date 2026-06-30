@@ -21,7 +21,7 @@ from app.core.config import (
     health_payload,
     refresh_env,
 )
-from app.routes import clientes, health, pagos, solicitudes
+from app.routes import auth_api, clientes, health, originacion, pagos, solicitudes, tarifario
 
 logging.basicConfig(
     level=logging.INFO,
@@ -46,7 +46,10 @@ app.add_middleware(
 )
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
 
+app.include_router(tarifario.router, tags=["tarifario"])
 app.include_router(health.router, tags=["health"])
+app.include_router(auth_api.router, prefix="/auth", tags=["auth"])
+app.include_router(originacion.router, prefix="/originacion", tags=["originacion"])
 app.include_router(solicitudes.router, prefix="/solicitudes", tags=["solicitudes"])
 app.include_router(clientes.router, prefix="/clientes", tags=["clientes"])
 app.include_router(pagos.router, prefix="/pagos", tags=["pagos"])
