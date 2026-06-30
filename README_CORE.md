@@ -119,6 +119,42 @@ También puede usar Swagger en `/docs`.
 
 Asegúrese de permitir el puerto 8000 en el firewall de Windows si no responde.
 
+## Desplegar en Render
+
+Repositorio: [Final-App-Core](https://github.com/Marvin-Usias-Caldas-Alanya/Final-App-Core)
+
+### Opción A — Blueprint (`render.yaml`)
+
+1. Entra a [dashboard.render.com](https://dashboard.render.com) → **New** → **Blueprint**
+2. Conecta el repo `Marvin-Usias-Caldas-Alanya/Final-App-Core`
+3. Render detectará `render.yaml` y creará el servicio web
+4. Completa las variables marcadas como secretas:
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `WEB_ADMIN_PASSWORD`
+5. **Create Blueprint** → espera el deploy
+
+### Opción B — Web Service manual
+
+| Campo | Valor |
+|-------|-------|
+| **Runtime** | Python 3 |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| **Health Check Path** | `/health` |
+
+Variables de entorno: las mismas que en `.env.example` (`API_ENV=production`).
+
+### Verificar
+
+- `https://TU-SERVICIO.onrender.com/health`
+- `https://TU-SERVICIO.onrender.com/login` (panel web)
+
+En las apps Flutter, actualiza `CORE_API_URL` con la URL de Render.
+
+> **Nota:** el plan free de Render puede tardar ~30 s en responder tras inactividad (cold start).
+
 ## Estructura
 
 ```
